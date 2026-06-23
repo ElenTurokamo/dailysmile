@@ -1,0 +1,26 @@
+services:
+
+  bot:
+    build: .
+    command: python bot.py
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - db-data:/app/data
+    environment:
+      DB_PATH: /app/data/users.db
+
+  scheduler:
+    build: .
+    command: python scheduler.py
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - db-data:/app/data
+    environment:
+      DB_PATH: /app/data/users.db
+    # Часовой пояс сервера — меняй под себя
+    # TZ: Europe/Moscow
+
+volumes:
+  db-data:
