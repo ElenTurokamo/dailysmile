@@ -8,7 +8,7 @@ import os
 import sqlite3
 from datetime import datetime
 
-import google.generativeai as genai
+from google import genai
 import schedule
 import time
 from telegram import Bot
@@ -29,17 +29,17 @@ SEND_TIME = os.getenv("SEND_TIME", "06:00")
 # ---------------------------------------------------------------------------
 
 def generate_fortune() -> str:
-    genai.configure(api_key=os.environ["AI_API_KEY"])
-    model = genai.GenerativeModel("gemini-2.0-flash")
-
-    response = model.generate_content(
-        "Ты — тёплый утренний друг, который помогает начать день с улыбкой. "
-        "Напиши одно короткое утреннее пожелание или вдохновляющую мысль на день "
-        "(2–4 предложения, не более 200 символов). "
-        "Тон: бодрый, тёплый, искренний — как сообщение от близкого человека. "
-        "Язык: русский. Начни сразу с текста, без вводных слов."
+    client = genai.Client(api_key=os.environ["AI_API_KEY"])
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=(
+            "Ты — тёплый утренний друг, который помогает начать день с улыбкой. "
+            "Напиши одно короткое утреннее пожелание или вдохновляющую мысль на день "
+            "(2–4 предложения, не более 200 символов). "
+            "Тон: бодрый, тёплый, искренний — как сообщение от близкого человека. "
+            "Язык: русский. Начни сразу с текста, без вводных слов."
+        ),
     )
-
     return response.text.strip()
 
 
